@@ -1,6 +1,17 @@
 <template>
-  <div id="app" :class= "typeof weather.main != 'undefined' && weather.main.temp <=19 ? 'cold' : 'warm'">
+  <div
+    id="app"
+    :class="
+      typeof weather.main != 'undefined' && weather.main.temp <= 25
+        ? 'cold'
+        : 'warm'
+    "
+  >
     <main>
+      <div class="header">
+        <h2>Weather App</h2>
+        <h2>Want to Know the Weather, We are Here</h2>
+      </div>
       <div class="searchbox">
         <input
           type="text"
@@ -9,36 +20,79 @@
           class="searchbar"
           placeholder="Search..."
           @keypress="getweather"
-          v-model="query"/>
+          v-model="query"
+        />
       </div>
-      <div class="weather" v-if="typeof weather.main != 'undefined'" >
+      <div class="weather" v-if="typeof weather.main != 'undefined'">
         <div class="location">
-          <p>{{this.weather.name}}</p>
-          <span>{{this.weather.sys.country}}</span>
+          <p>{{ this.weather.name }}</p>
+          <span>{{ this.weather.sys.country }}</span>
         </div>
-        <div class="temp">{{Math.round(weather.main.temp)}}°C</div>
+        <div class="temp">{{ Math.round(weather.main.temp) }}°C</div>
         <div class="weather-icon">
           <img :src="icon" alt="" />
         </div>
-        <div class="condition">{{weather.weather[0].main}}</div>
+        <div class="condition">
+          {{weather.weather[0].main}}
+        </div>
       </div>
       <div class="additional" v-if="typeof weather.main != 'undefined'">
         <table>
           <td>
-            <tr>Visibility</tr>
-            <tr>Humidity</tr>
-            <tr>Wind Speed</tr>
-            <tr>Pressure</tr>
-            <tr>Maximum Temperature</tr>
-            <tr>Minimum Temperature</tr>
+            <tr>
+              Visibility
+            </tr>
+            <tr>
+              Humidity
+            </tr>
+            <tr>
+              Wind Speed
+            </tr>
+            <tr>
+              Pressure
+            </tr>
+            <tr>
+              Maximum Temperature
+            </tr>
+            <tr>
+              Minimum Temperature
+            </tr>
           </td>
+
           <td>
-            <tr>{{this.weather.visibility}} meters</tr>
-            <tr>{{this.weather.main.humidity}}%</tr>
-            <tr>{{this.weather.wind.speed}} meter/sec</tr>
-            <tr>{{this.weather.main.pressure}} h/Pa</tr>
-            <tr>{{this.weather.main.temp_max}}°C</tr>
-            <tr>{{this.weather.main.temp_min}}°C</tr>
+            <tr>
+              {{
+                this.weather.visibility
+              }}
+              meters
+            </tr>
+            <tr>
+              {{
+                this.weather.main.humidity
+              }}%
+            </tr>
+            <tr>
+              {{
+                this.weather.wind.speed
+              }}
+              meter/sec
+            </tr>
+            <tr>
+              {{
+                this.weather.main.pressure
+              }}
+              h/Pa
+            </tr>
+            <tr>
+              {{
+                this.weather.main.temp_max
+              }}°C
+            </tr>
+            <tr>
+              {{
+                this.weather.main.temp_min
+              }}°C
+            </tr>
           </td>
         </table>
       </div>
@@ -48,36 +102,41 @@
 
 <script>
 export default {
-  name: 'app',
+  name: "app",
   data() {
     return {
-      api_key: '13c16fb318cfeeae7a3fb2a577a31d14',
-      url: 'https://api.openweathermap.org/data/2.5/weather',
+      api_key: "13c16fb318cfeeae7a3fb2a577a31d14",
+      url: "https://api.openweathermap.org/data/2.5/weather",
       query: "",
       weather: {},
-      icon: '',
-    }
+      icon: "",
+    };
   },
   methods: {
     getweather(e) {
       if (e.key === "Enter") {
-        fetch(`${this.url}?&q=${this.query}&units=metric&APPID=${this.api_key}`).then(res => {
+        fetch(`${this.url}?&q=${this.query}&units=metric&APPID=${this.api_key}`)
+          .then((res) => {
             return res.json();
-          }).then(this.setresponse).then(this.geticon)
+          })
+          .then(this.setresponse)
+          .then(this.geticon);
       }
     },
-    setresponse(res){
+    setresponse(res) {
       this.weather = res;
       console.log(this.weather);
     },
-    geticon(){
-      this.icon = this.weather.weather[0].icon;
-    }
+    geticon() {
+      this.icon = `http://openweathermap.org/img/wn/${this.weather.weather[0].icon}@2x.png`;
+    },
   },
 };
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -90,25 +149,28 @@ export default {
   transition: 0.4s;
   height: 100vh;
 }
-#app.cold
-{
-  background-image: url('./assets/2942776.jpg');
+#app.cold {
+  background-image: url("./assets/2942776.jpg");
 }
-#app.warm
-{
-  background-image: url('./assets/warm.jpg');
+#app.warm {
+  background-image: url("./assets/warm.jpg");
 }
 main {
-  display: block;
-  align-content: center;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
   color: white;
-  padding-left: 45%;
-  padding-top: 50px;
+  padding-top: 20px;
   min-height: 100vh;
+  align-items: center;
   background-image: linear-gradient(rgb(0, 0, 0, 0.25), rgb(0, 0, 0, 0.75));
 }
-<!-- Styling for the SearchBox > 
-.searchbox {
+.header {
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 5px;
+}
+<!-- Styling for the SearchBox > .searchbox {
   padding: 35px;
 }
 .searchbar {
@@ -118,48 +180,44 @@ main {
 
   height: 30px;
   padding: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 
   background-color: lightgrey;
-  border-radius: 0px 10px 0px 10px;
+  border-radius: 8px;
   transition: 0.5s;
 }
 .searchbox:focus {
   box-shadow: rgb(0, 0, 0, 0.5);
   border-radius: 10px 0px 10px 0px;
 }
-<!-- Styling the Weather information > 
+
 .location {
-  
-  margin: 20px;
+  margin: 5px;
 }
 .location p {
-  font-size: 50px;
+  text-align: center;
+  font-size: 35px;
 }
 .location span {
+  text-align: center;
   font-size: 25px;
 }
 .temp {
-  margin-left: 20px;
-  font-size: 60px;
+  text-align: center;
+  font-size: 40px;
 }
-.weather-icon {
-  margin-left: 20px;
+.condition {
+  text-align: center;
+  font-size: 25px;
 }
-.condition
-{
-  font-size: 23px;
-}
-<!-- Styling for the the info > 
 table {
-  margin-top: 20px;
-  margin-left: 0px;
+  margin: auto;
 }
 table td {
-  padding: 30px;
+  padding: 20px;
 }
 table tr {
-  font-size: 25px;
-  padding: 3px;
+  font-size: 18px;
+  padding-bottom: 5px;
 }
 </style>
